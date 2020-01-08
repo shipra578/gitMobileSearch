@@ -4,4 +4,7 @@
     <string name="commit_count">Commit count</string>
     <string name="watcher_count">Watcher count</string>
     <string name="full_name">Full Name</string>
+    <string name="name_value">Shipra</string>
+    <string name="project_url_title">Project Url</string>
+    <string name="description_title">Description</string>
 </resources>
