@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="top_seperation">16dp</dimen>
+    <dimen name="top_seperation_after_Search">40dp</dimen>
     <dimen name="image_width">107dp</dimen>
 </resources>
