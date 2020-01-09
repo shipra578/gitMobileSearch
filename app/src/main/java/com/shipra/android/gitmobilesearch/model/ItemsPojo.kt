@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-data class RepoPojo(
+data class ItemsPojo(
 
         @PrimaryKey
         @ColumnInfo(name = "id")
@@ -19,12 +19,16 @@ data class RepoPojo(
         @SerializedName("full_name")
         var full_name: String,
 
-        @ColumnInfo(name = "url")
+        @ColumnInfo(name = "owner")
+        @SerializedName("owner")
+        var owner : Owner
+
+      /*  @ColumnInfo(name = "url")
         @SerializedName("url")
         var url: String,
 
-        @ColumnInfo(name = "fullname")
-        @SerializedName("fullname")
+        @ColumnInfo(name = "watcher_count")
+        @SerializedName("watcher_count")
         var watcher_count: Int,
 
         @ColumnInfo(name = "commitCount")
@@ -36,6 +40,5 @@ data class RepoPojo(
         var description: String,
 
         @ColumnInfo(name = "contributors")
-        @SerializedName("contributors")
-        var contributors: Contributors) {
+        var contributors: Contributors*/) {
 }

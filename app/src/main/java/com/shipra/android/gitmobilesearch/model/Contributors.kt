@@ -5,10 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Contributors(
 
-
-
         var id: Int,
-
 
         @ColumnInfo(name = "contributor_name")
         @SerializedName("name")

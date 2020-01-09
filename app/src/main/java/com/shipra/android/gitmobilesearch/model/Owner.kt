@@ -5,18 +5,20 @@ import com.google.gson.annotations.SerializedName
 
 data class Owner(
 
-        @ColumnInfo(name = "contributor_name")
-        @SerializedName("name")
+        @ColumnInfo(name = "owner_id")
+        @SerializedName("id")
         var id: Int,
 
-
-        @ColumnInfo(name = "contributor_name")
-        @SerializedName("name")
+        @ColumnInfo(name = "avatar_url")
+        @SerializedName("avatar_url")
         var avatar_url: String,
 
+        @ColumnInfo(name = "repos_url")
+        @SerializedName("repos_url")
+        var repos_url: String,
 
-        @ColumnInfo(name = "contributor_name")
-        @SerializedName("name")
-        var repo_url: String){
+        @ColumnInfo(name = "login")
+        @SerializedName("login")
+        var login: String){
 
 }
