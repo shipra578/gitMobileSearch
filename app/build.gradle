@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.shipra.android.gitmobilesearch"
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -14,9 +15,19 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            buildConfigField("String", "MAIN_URL", "\"https://api.github.com/\"")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            buildConfigField("String", "MAIN_URL", "\"https://api.github.com/\"")
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    kapt {
+        generateStubs = true
     }
 }
 
@@ -55,8 +66,9 @@ dependencies {
     //*****************************Architecture Components and Dagger****************************************
 
     def room_version = "1.1.1"
-    def daggerCompiler = "com.google.dagger:dagger-compiler:2.12"
+    def daggerCompiler = "com.google.dagger:dagger-compiler:2.23.1"
     implementation 'com.google.dagger:dagger:2.23.1'
+    kapt 'com.google.dagger:dagger-compiler:2.23.1'
     annotationProcessor daggerCompiler
     testAnnotationProcessor daggerCompiler
     androidTestAnnotationProcessor daggerCompiler
