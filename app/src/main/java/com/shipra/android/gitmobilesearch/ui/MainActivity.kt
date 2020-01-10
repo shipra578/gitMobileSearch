@@ -16,5 +16,7 @@ class MainActivity : AppCompatActivity() {
 
         mViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(MainViewModel::class.java)
 
+        mViewModel?.getAllRepo("Shipra")
+
     }
 }

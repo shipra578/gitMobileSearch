@@ -9,8 +9,7 @@ import dagger.Provides
 class GitDaggerModule {
 
     @Provides
-    fun providesGitApiService() : GitApiService?{
+    fun providesGitApiService() : GitApiService{
         return GitRetrofitCreator.newApiService()
     }
-
 }

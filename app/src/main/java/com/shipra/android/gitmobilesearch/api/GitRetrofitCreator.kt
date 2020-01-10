@@ -12,7 +12,7 @@ class GitRetrofitCreator {
 
     companion object {
 
-        fun newApiService(): GitApiService? {
+        fun newApiService(): GitApiService {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             val builder = OkHttpClient.Builder()
