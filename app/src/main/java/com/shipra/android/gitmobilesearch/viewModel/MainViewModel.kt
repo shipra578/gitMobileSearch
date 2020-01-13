@@ -3,25 +3,26 @@ package com.shipra.android.gitmobilesearch.viewModel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.shipra.android.gitmobilesearch.dagger.App
+import com.shipra.android.gitmobilesearch.liveData.CustomLivedata
 import com.shipra.android.gitmobilesearch.model.Repo
 import com.shipra.android.gitmobilesearch.repository.ApiRepository
-import io.reactivex.Observable
 import javax.inject.Inject
 
 class MainViewModel(app: Application) : AndroidViewModel(app) {
 
 
+    @JvmField
+     var mRepo: ApiRepository
+
+
     init {
-        App.getComponent()?.inject(this)
+        mRepo = ApiRepository.getInstance(app)
     }
 
-    @Inject
-    lateinit var mRepo: ApiRepository
+    fun getAllRepo(inputText: String): CustomLivedata<Repo>? {
 
+            return mRepo.getAllRepos(inputText)
 
-    fun getAllRepo(inputText: String): Observable<Repo> {
-
-        return mRepo.getAllRepos(inputText)
 
     }
 }

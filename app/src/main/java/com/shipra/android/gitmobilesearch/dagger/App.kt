@@ -2,6 +2,7 @@ package com.shipra.android.gitmobilesearch.dagger
 
 import android.app.Application
 
+
 class App : Application() {
 
     override fun onCreate() {
@@ -10,14 +11,14 @@ class App : Application() {
 
 
     companion object {
-        private  var component: CustomDaggerComponent? = null
+        var comp: CustomDaggerComponent? = null
 
         fun getComponent(): CustomDaggerComponent? {
-            if (component == null) {
+            if (comp == null) {
 
-                component = DaggerCustomDaggerComponent.builder().application(application = Application()).build()
+                comp = DaggerCustomDaggerComponent.builder().application(application = Application()).build()
             }
-            return component
+            return comp
         }
     }
 }

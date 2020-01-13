@@ -11,6 +11,7 @@ import javax.inject.Singleton
 @Component(modules = [GitDaggerModule::class, ApplicationModule::class])
 interface CustomDaggerComponent {
 
+
     @Component.Builder
     interface Builder {
 
@@ -18,17 +19,13 @@ interface CustomDaggerComponent {
         fun application(application: Application): Builder
 
         fun build(): CustomDaggerComponent
-
-
     }
 
-    //fun getApplication(app : Application)
+    fun getApplicationContext(): Application
 
-    fun inject(mainViewModel: MainViewModel)
+    //fun inject(viewModel: MainViewModel)
 
-    fun getApiRepository(app: Application)
-    //fun inject(repo : ApiRepository)
-
+    //fun getApiRepository(application: Application)
 
 
 }
