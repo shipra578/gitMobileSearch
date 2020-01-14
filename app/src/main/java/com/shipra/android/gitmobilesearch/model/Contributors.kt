@@ -15,7 +15,7 @@ data class Contributors(
         var id: Int,
 
         @ColumnInfo(name = "contributor_name")
-        @SerializedName("name")
+        @SerializedName("login")
         var name: String,
 
 
@@ -28,11 +28,11 @@ data class Contributors(
         @SerializedName("contributions")
         var commitCount: Int,
 
-        @ColumnInfo(name = "login")
+    /*    @ColumnInfo(name = "login")
         @SerializedName("login")
         var login: String,
-
+*/
 
         @ColumnInfo(name = "repo_url")
-        @SerializedName("repo_url")
+        @SerializedName("repos_url")
         var repo_url: String)

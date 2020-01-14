@@ -1,21 +1,21 @@
 package com.shipra.android.gitmobilesearch.model
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 
-@Entity(tableName = "relation", foreignKeys = [
+@Entity(tableName = "relation", primaryKeys = ["repoIdR", "ownerIdR"], foreignKeys = [
 
     ForeignKey(entity = Repositories::class, parentColumns = arrayOf("repoId"),childColumns = arrayOf("repoIdR"),onDelete = ForeignKey.CASCADE),
-    ForeignKey(entity = Contributors::class,parentColumns = arrayOf("contId"),childColumns = arrayOf("own"),onDelete = ForeignKey.CASCADE)
-], indices = [Index("repoIdR","own")] )
+    ForeignKey(entity = Contributors::class,parentColumns = arrayOf("contId"),childColumns = arrayOf("ownerIdR"),onDelete = ForeignKey.CASCADE)
+], indices = [Index("repoIdR", "ownerIdR")])
 data class HasRelation(
 
-        @PrimaryKey(autoGenerate = true)
-        var hasId: Int,
-
         @ColumnInfo(name = "repoIdR")
-        var repoIdR : Int,
+        var repoIdR: Int,
 
-        @ColumnInfo(name = "own")
+        @ColumnInfo(name = "ownerIdR")
         var ownerIdR: Int
 
 )

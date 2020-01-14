@@ -9,7 +9,6 @@ import com.shipra.android.gitmobilesearch.liveData.CustomLivedata
 import com.shipra.android.gitmobilesearch.model.*
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Function
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +22,7 @@ class ApiRepository @Inject constructor(app: Application) {
     @JvmField
     var mDataBase = GitProjectDatabase.getInstance(app)
 
-    lateinit var mLivedata: CustomLivedata<Repo>
+    lateinit var mLivedata: CustomLivedata<List<ItemsPojo>>
 
     @JvmField
     var mDao: GitDao
@@ -55,40 +54,17 @@ class ApiRepository @Inject constructor(app: Application) {
     }
 
 
-    fun getAllRepos(searchText: String): CustomLivedata<Repo> {
+    fun getAllRepos(searchText: String): CustomLivedata<List<ItemsPojo>> {
 
 
         mLivedata = CustomLivedata()
 
+        var itemID = 0
+        var RepoId = 0
 
-        /* val subscribeWith = gitApiService.searchRepositories(searchText).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribeWith(object : DisposableObserver<Repo>() {
-
-           override fun onComplete() {
-               Log.e(TAG, "onComplete")
-           }
-
-
-           override fun onNext(t: Repo) {
-
-
-
-               mLivedata.postValue(t)
-           }
-
-           override fun onError(e: Throwable) {
-
-               Log.e(TAG, e?.message)
-           }
-       })*/
-
-        var mRepoObject: Repo
-        var itemID: Int = 0
-        var RepoId: Int = 0;
-
-        gitApiService.searchRepositories(searchText).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).flatMap(object : Function<Repo, ObservableSource<List<ItemsPojo>>> {
+        val subscribeWith = gitApiService.searchRepositories(searchText).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).flatMap(object : Function<Repo, ObservableSource<List<ItemsPojo>>> {
 
             override fun apply(t: Repo): ObservableSource<List<ItemsPojo>> {
-                mRepoObject = t
                 return Observable.fromArray(t.items)
             }
         }
@@ -96,40 +72,65 @@ class ApiRepository @Inject constructor(app: Application) {
         ).flatMapIterable {
 
             it
-        }.flatMap(object : Function<ItemsPojo, ObservableSource<List<Repositories>>> {
+        }.flatMap(object : Function<ItemsPojo?, ObservableSource<List<Repositories>>?> {
 
             override fun apply(t: ItemsPojo): ObservableSource<List<Repositories>> {
-                mDao.insertItemsPojo(t)
+                Log.e(TAG, "Items details: ${t.full_name} and Watcher count : ${t.watcher_count}")
+
+                if (!mDao.checkIfRepoPresent(t.id)) {
+                    mDao.insertItemsPojo(t)
+                }
                 itemID = t.id
                 return gitApiService.getRepositories(t.owner.repos_url)
             }
         }).flatMapIterable {
             it
 
-        }.flatMap(object : Function<Repositories?, ObservableSource<List<Contributors>>> {
+        }.flatMap(object : Function<Repositories?, ObservableSource<List<Contributors>>?> {
 
             override fun apply(t: Repositories): ObservableSource<List<Contributors>> {
 
+                Log.e(TAG, "Repository details: ${t.contributors_url} and RepoId : ${t.repoId}")
                 t.item_id = itemID
-                //mDao.insertRepositories(t)
+                if (!mDao.checkIfItemPresent(t.repoId)) {
+                    mDao.insertRepositories(t)
+
+                }
 
                 RepoId = t.repoId
                 return gitApiService.getContributors(t.contributors_url)
             }
-        }).flatMapIterable {
+        })?.flatMapIterable {
             it
 
-        }.subscribeWith(object : DisposableObserver<Contributors>() {
+        }?.doOnError {
+            Log.e(TAG, " Error on flatmapIterable:  ${it.message}")
+
+        }?.onErrorResumeNext(Observable.empty())?.flatMap(object : Function<Contributors?, ObservableSource<List<ItemsPojo>>?> {
+
+            override fun apply(t: Contributors): ObservableSource<List<ItemsPojo>>? {
+
+                val hasRelation = HasRelation(RepoId, t.id)
+                val tid = t.id
+                Log.i(TAG, "RepoID $RepoId , ContributorId: $tid")
+                if (!mDao.checkIfContributorPresent(tid)) {
+                    mDao.insertContributors(t)
+                }
+
+                if (!mDao.checkIfRelationPresent(RepoId)) {
+                    mDao.insertHasRelationship(hasRelation)
+                }
+                return Observable.fromArray(mDao.loadAllRepositories())
+            }
+        })?.subscribeWith(object : DisposableObserver<List<ItemsPojo>?>() {
 
             override fun onComplete() {
                 Log.i(TAG, "**********completed")
             }
 
-            override fun onNext(t: Contributors) {
-                var hasRelation = HasRelation(0, RepoId, t.id)
-                // mDao.insertHasRelationship(hasRelation)
-                // mDao.insertContributors(t)
+            override fun onNext(t: List<ItemsPojo>) {
 
+                mLivedata.postValue(t)
             }
 
             override fun onError(e: Throwable) {
@@ -137,79 +138,9 @@ class ApiRepository @Inject constructor(app: Application) {
                 Log.e(TAG, "**********error ${e.message}")
             }
         })
-
-
-        /* gitApiService.searchRepositories(searchText).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).flatMap(object : Function<Repo, ObservableSource<List<ItemsPojo>>> {
-
-             @Throws(Exception::class)
-             override fun apply(t: Repo): ObservableSource<List<ItemsPojo>>? {
-
-                 mRepoObject = t
-                 return Observable.fromArray(t.items)
-             }
-         }).flatMapIterable {
-             it
-         }.flatMap(object : Function<ItemsPojo?, ObservableSource<List<Repositories>>> {
-
-             override fun apply(t: ItemsPojo): ObservableSource<List<Repositories>> {
-
-                 // mDao.insertItemsPojo(t)
-                 itemID = t.id
-                 return gitApiService.getRepositories(t.owner.repos_url)
-             }
-
-         }).flatMapIterable {
-             it
-
-         }.flatMap(object : Function<Repositories?, ObservableSource<List<Contributors>>> {
-
-             override fun apply(t: Repositories): ObservableSource<List<Contributors>> {
-
-                 t.item_id = itemID
-                 //mDao.insertRepositories(t)
-
-                 RepoId = t.repoId
-                 return gitApiService.getContributors(t.contributors_url)
-             }
-         })?.flatMapIterable {
-             it
-
-         }.subscribeWith(object : DisposableObserver<Contributors>() {
-
-             override fun onComplete() {
-                 Log.i(TAG, "**********completed")
-             }
-
-             override fun onNext(t: Contributors) {
-                 var hasRelation = HasRelation(0, RepoId, t.id)
-                 // mDao.insertHasRelationship(hasRelation)
-                 // mDao.insertContributors(t)
-
-             }
-
-             override fun onError(e: Throwable) {
-
-                 Log.e(TAG, "**********error ${e.message}")
-             }
-         })*/
         return mLivedata
     }
 
-    fun getContributors(items: List<ItemsPojo>) {
-
-
-        for (it in items) {
-
-            it.owner.repos_url
-        }
-
-    }
-
-}
-
-
-fun <T> Observable<T>.flatMap(function: (T) -> Unit): Any {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 }
 
 

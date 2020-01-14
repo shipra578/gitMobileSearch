@@ -15,9 +15,9 @@ interface GitApiService {
     fun searchRepositories(@Query("q") userName: String?): Observable<Repo>
 
     @GET
-    fun getRepositories(@Url reposUrl: String): ObservableSource<List<Repositories>>
+    fun getRepositories(@Url reposUrl: String): Observable<List<Repositories>>
 
     @GET
-    fun getContributors(@Url contributorsUrl: String): ObservableSource<List<Contributors>>
+    fun getContributors(@Url contributorsUrl: String): Observable<List<Contributors>>
 
 }
