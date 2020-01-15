@@ -1,5 +1,7 @@
 package com.shipra.android.gitmobilesearch.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
 
@@ -32,8 +34,40 @@ data class ItemsPojo(
           var contributors_url: String,*/
 
         @Ignore
-        var repositories: List<Repositories>) {
+        var repositories: List<Repositories>) : Parcelable{
 
-    constructor() : this(0, "", "", Owner(0, "", "", ""), 0, ArrayList<Repositories>())
+        constructor(parcel: Parcel) : this(
+                parcel.readInt(),
+                parcel.readString()!!,
+                parcel.readString()!!,
+                parcel.readParcelable(Owner::class.java.classLoader)!!,
+                parcel.readInt(),
+                parcel.createTypedArrayList(Repositories)!!) {
+        }
+
+        constructor() : this(0, "", "", Owner(0, "", "", ""), 0, ArrayList<Repositories>())
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+                parcel.writeInt(id)
+                parcel.writeString(name)
+                parcel.writeString(full_name)
+                parcel.writeParcelable(owner, flags)
+                parcel.writeInt(watcher_count)
+                parcel.writeTypedList(repositories)
+        }
+
+        override fun describeContents(): Int {
+                return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<ItemsPojo> {
+                override fun createFromParcel(parcel: Parcel): ItemsPojo {
+                        return ItemsPojo(parcel)
+                }
+
+                override fun newArray(size: Int): Array<ItemsPojo?> {
+                        return arrayOfNulls(size)
+                }
+        }
 
 }

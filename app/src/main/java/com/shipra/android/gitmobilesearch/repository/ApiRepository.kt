@@ -178,14 +178,6 @@ class ApiRepository @Inject constructor(app: Application) {
         })
         return mLivedata
     }
-
-    fun printAllReposAfterInsertion( repolist: ArrayList<Repositories>){
-
-        for(repo in repolist){
-           // Log.e(TAG, "item ID : ${repo.item_id} repID: ${repo.repoId}")
-        }
-
-    }
 }
 
 

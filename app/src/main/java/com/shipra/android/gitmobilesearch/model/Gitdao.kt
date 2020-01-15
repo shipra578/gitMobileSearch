@@ -22,10 +22,6 @@ interface GitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertRepositories(repo: Repositories?): Long
 
-
- /*   @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHasRelationship(has: HasRelation?)*/
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertContRepo(has: ContributorRepoRelation?)
 
@@ -34,11 +30,6 @@ interface GitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItemsPojo(t: ItemsPojo)
-
-/*
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHasRelation(t: HasRelation)*/
-
 
     @Query("SELECT * FROM Repo WHERE  searchText = :text")
     fun checkIfRepoExists(text: String): Repo
@@ -68,9 +59,5 @@ interface GitDao {
 
     @Query("SELECT * FROM repositories WHERE item_id =:itemId1")
     fun getRepositoriesFromItemId(itemId1: Int): List<Repositories>
-
-   /* //@Query("SELECT ATTRIBUTES.* FROM ATTRIBUTES INNER JOIN PRODUCTS_ATTRIBUTES ON PRODUCTS_ATTRIBUTES._ATTRIBUTE_ID = ATTRIBUTES._ID INNER JOIN PRODUCTS ON PRODUCTS._ID = PRODUCTS_ATTRIBUTES._PRODUCT_ID WHERE PRODUCTS._ID = :productId ORDER BY PRODUCTS_ATTRIBUTES.DISPLAY_ORDERING ASC")
-    @Query("SELECT Contributors.* FROM Contributors INNER JOIN  contributorrepotable ON contributorrepotable.contributorIdRelation = Contributors.contrId INNER JOIN Repositories ON repoId = contributorIdRelation WHERE Contributors.contrId=:repositoryId")
-    fun getAllContributors(repositoryId: Int): List<Contributors>*/
 
 }
