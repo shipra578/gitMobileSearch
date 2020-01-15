@@ -4,18 +4,17 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Repo(
 
         @PrimaryKey
-        @ColumnInfo(name = "rId")
-        var rId: Int,
+        @ColumnInfo(name = "searchText")
+        var searchText: String,
 
         @Ignore var items: List<ItemsPojo>){
 
 
-    constructor(): this(0,ArrayList<ItemsPojo>())
+    constructor(): this("",ArrayList<ItemsPojo>())
 
 }

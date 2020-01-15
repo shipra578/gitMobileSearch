@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.*
 
 @TypeConverters(OwnerTypeConverter::class)
-@Database(entities = [ItemsPojo::class, Repositories::class, Contributors::class, HasRelation::class, Repo::class], version = 1, exportSchema = false)
+@Database(entities = [ItemsPojo::class, Repositories::class, Contributors::class, Repo::class, ContributorRepoRelation::class], version = 1, exportSchema = false)
 abstract class GitProjectDatabase constructor(app: Application) : RoomDatabase() {
 
     constructor() : this(app = Application()) {}

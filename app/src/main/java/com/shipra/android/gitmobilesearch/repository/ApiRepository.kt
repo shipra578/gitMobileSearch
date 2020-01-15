@@ -53,54 +53,88 @@ class ApiRepository @Inject constructor(app: Application) {
         }
     }
 
+    fun getAllReposFromDB(): List<ItemsPojo> {
+
+        var lisItems: List<ItemsPojo> = mDao.loadAllItemsRepo()
+        for (item in lisItems) {
+
+            val repoList = mDao.getRepositoriesFromItemId(item.id)
+
+            for (repoItem in repoList) {
+                val contributorList = mDao.getAllContributors1(repoItem.repoId)
+                Log.e(TAG, "contributor list size: ${contributorList.size}")
+                repoItem.contributors = contributorList
+            }
+            item.repositories = repoList
+        }
+        return lisItems
+    }
+
 
     fun getAllRepos(searchText: String): CustomLivedata<List<ItemsPojo>> {
 
 
         mLivedata = CustomLivedata()
+        val repo = mDao.checkIfRepoExists(searchText)
+        if (repo?.searchText != null) {
+            mLivedata.postValue(getAllReposFromDB())
+            return mLivedata
+        }
 
         var itemID = 0
         var RepoId = 0
-
+        var itemList: List<ItemsPojo> = arrayListOf()
         val subscribeWith = gitApiService.searchRepositories(searchText).subscribeOn(Schedulers.io()).observeOn(Schedulers.io()).flatMap(object : Function<Repo, ObservableSource<List<ItemsPojo>>> {
 
             override fun apply(t: Repo): ObservableSource<List<ItemsPojo>> {
+                t.searchText = searchText
+                mDao.insertRepo(t)
                 return Observable.fromArray(t.items)
             }
         }
 
-        ).flatMapIterable {
-
+        ).filter {
+            it !=null && !it.isEmpty()
+        }?.flatMapIterable {
+            Log.e(TAG,"********************************Items Pojo insertion started**************************************************************************************")
+            itemList = it
             it
-        }.flatMap(object : Function<ItemsPojo?, ObservableSource<List<Repositories>>?> {
+
+        }?.flatMap(object : Function<ItemsPojo?, ObservableSource<List<Repositories>>?> {
 
             override fun apply(t: ItemsPojo): ObservableSource<List<Repositories>> {
-                Log.e(TAG, "Items details: ${t.full_name} and Watcher count : ${t.watcher_count}")
 
-                if (!mDao.checkIfRepoPresent(t.id)) {
+                if (mDao.checkIfRepoPresent(t.id) == null) {
                     mDao.insertItemsPojo(t)
                 }
+
                 itemID = t.id
                 return gitApiService.getRepositories(t.owner.repos_url)
             }
-        }).flatMapIterable {
+        })?.filter {
+            it !=null && !it.isEmpty()
+        }?.flatMapIterable {
+            Log.e(TAG,"********************************Repo insertion started**************************************************************************************")
             it
 
-        }.flatMap(object : Function<Repositories?, ObservableSource<List<Contributors>>?> {
+        }?.flatMap(object : Function<Repositories?, ObservableSource<List<Contributors>>?> {
 
             override fun apply(t: Repositories): ObservableSource<List<Contributors>> {
-
-                Log.e(TAG, "Repository details: ${t.contributors_url} and RepoId : ${t.repoId}")
                 t.item_id = itemID
-                if (!mDao.checkIfItemPresent(t.repoId)) {
+                if (mDao.checkIfItemPresent(t.repoId) == null) {
                     mDao.insertRepositories(t)
-
                 }
 
+               // printAllReposAfterInsertion(mDao.selectAllRepositories() as ArrayList<Repositories>)
                 RepoId = t.repoId
+                Log.e(TAG,"contributors url : ${t.contributors_url}")
                 return gitApiService.getContributors(t.contributors_url)
             }
-        })?.flatMapIterable {
+        })?.onErrorResumeNext(Observable.empty())?.filter {
+            Log.e(TAG, "it value $it")
+            it !=null && !it.isEmpty()
+        }?.onErrorResumeNext(Observable.empty())?.flatMapIterable {
+            Log.e(TAG,"********************************Contributor insertion started**************************************************************************************")
             it
 
         }?.doOnError {
@@ -110,27 +144,31 @@ class ApiRepository @Inject constructor(app: Application) {
 
             override fun apply(t: Contributors): ObservableSource<List<ItemsPojo>>? {
 
-                val hasRelation = HasRelation(RepoId, t.id)
+                val hasRelation = ContributorRepoRelation(0,t.id,RepoId )
                 val tid = t.id
-                Log.i(TAG, "RepoID $RepoId , ContributorId: $tid")
-                if (!mDao.checkIfContributorPresent(tid)) {
-                    mDao.insertContributors(t)
-                }
+                Log.e(TAG, "RepoID $RepoId , ContributorId: $tid")
 
-                if (!mDao.checkIfRelationPresent(RepoId)) {
-                    mDao.insertHasRelationship(hasRelation)
+               // val contributor = mDao.checkIfContributorPresent(tid)
+                val repository = mDao.checkIfRepoPresent(RepoId)
+
+                mDao.insertContributors(t)
+
+                if (mDao.checkIfContributorPresent(tid) != null && repository != null) {
+                    Log.e(TAG,"inserting into has relationship table")
+                    mDao.insertContRepo(hasRelation)
                 }
-                return Observable.fromArray(mDao.loadAllRepositories())
+                return Observable.fromArray(getAllReposFromDB())
             }
         })?.subscribeWith(object : DisposableObserver<List<ItemsPojo>?>() {
 
             override fun onComplete() {
+                mLivedata.postValue(itemList)
                 Log.i(TAG, "**********completed")
             }
 
             override fun onNext(t: List<ItemsPojo>) {
+                itemList = t
 
-                mLivedata.postValue(t)
             }
 
             override fun onError(e: Throwable) {
@@ -141,6 +179,13 @@ class ApiRepository @Inject constructor(app: Application) {
         return mLivedata
     }
 
+    fun printAllReposAfterInsertion( repolist: ArrayList<Repositories>){
+
+        for(repo in repolist){
+           // Log.e(TAG, "item ID : ${repo.item_id} repID: ${repo.repoId}")
+        }
+
+    }
 }
 
 

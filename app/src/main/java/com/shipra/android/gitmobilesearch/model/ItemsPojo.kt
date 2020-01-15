@@ -24,7 +24,7 @@ data class ItemsPojo(
         var owner: Owner,
 
         @ColumnInfo(name = "watcher_count")
-        @SerializedName("watcher_count")
+        @SerializedName("watchers_count")
         var watcher_count: Int,
 
         /*  @ColumnInfo(name = "contributors_url")

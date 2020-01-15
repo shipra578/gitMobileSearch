@@ -5,6 +5,7 @@ import com.shipra.android.gitmobilesearch.model.Repo
 import com.shipra.android.gitmobilesearch.model.Repositories
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
+import io.reactivex.annotations.NonNull
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
