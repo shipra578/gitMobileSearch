@@ -41,14 +41,12 @@ class MainActivity : AppCompatActivity(), ListItemClickListener {
         mRecyclerView = item_recycler_view
         mSearchView = search_repo
 
-        //mSearchView.setOnQueryTextListener(this)
         val manager = LinearLayoutManager(applicationContext)
         manager.orientation = LinearLayoutManager.VERTICAL
         mRecyclerView.setLayoutManager(manager)
         adapter = ItemListAdapter(itemsList, this)
         mRecyclerView.adapter = adapter
         mViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(MainViewModel::class.java)
-
         registerForSearchResult()
 
     }

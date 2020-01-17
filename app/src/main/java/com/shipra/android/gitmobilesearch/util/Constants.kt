@@ -48,5 +48,8 @@ interface Constants {
         @JvmField
         val KEY_REPO_OBJECT: String = "key_repo_object"
 
+        @JvmField
+        val KEY_WEB_URL: String = "key_wen_url"
+
     }
 }

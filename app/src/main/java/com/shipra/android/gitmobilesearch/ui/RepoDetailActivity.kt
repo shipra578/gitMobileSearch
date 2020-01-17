@@ -1,12 +1,13 @@
 package com.shipra.android.gitmobilesearch.ui
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
@@ -15,17 +16,16 @@ import com.shipra.android.gitmobilesearch.R
 import com.shipra.android.gitmobilesearch.model.Contributors
 import com.shipra.android.gitmobilesearch.model.Repositories
 import com.shipra.android.gitmobilesearch.ui.adapter.ContributorAdapter
-import com.shipra.android.gitmobilesearch.ui.adapter.ItemListAdapter
 import com.shipra.android.gitmobilesearch.util.Constants
 import kotlinx.android.synthetic.main.activity_repo_detail.*
 
 class RepoDetailActivity : AppCompatActivity() {
 
     lateinit var description: String
-    lateinit var projectLink : String
-    lateinit var ownerImage : ImageView
+    lateinit var projectLink: String
+    lateinit var ownerImage: ImageView
     lateinit var name: TextView
-    lateinit var descriptionView:  TextView
+    lateinit var descriptionView: TextView
     lateinit var projectLinkView: TextView
     lateinit var adapter: ContributorAdapter
     lateinit var contRecycler: RecyclerView
@@ -44,6 +44,13 @@ class RepoDetailActivity : AppCompatActivity() {
 
         descriptionView.setText(description)
         projectLinkView.setText(projectLink)
+
+
+        projectLinkView.setOnClickListener(View.OnClickListener {
+            intent = Intent(applicationContext, WebViewActivity::class.java)
+            intent.putExtra(Constants.KEY_PROJECT_LINK, projectLink)
+            startActivity(intent)
+        })
         var avatar_url: String
         avatar_url = itemPojo?.avatar_url!!
 

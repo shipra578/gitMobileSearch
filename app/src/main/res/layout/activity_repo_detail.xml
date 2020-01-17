@@ -9,12 +9,12 @@
 
     <ImageView
         android:id="@+id/owner_image"
-        android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/name_value"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_below_image"
@@ -33,84 +33,84 @@
 
     <TextView
         android:id="@+id/name_title"
-        android:layout_width="0dp"
-        android:textAlignment="viewStart"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/top_seperation"
         android:text="@string/repo_name"
-        android:layout_marginTop="@dimen/top_seperation"
+        android:textAlignment="viewStart"
+        app:layout_constraintEnd_toStartOf="@+id/name_value"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_below_image" />
+        app:layout_constraintTop_toTopOf="@+id/guideline_below_image" />
 
     <TextView
         android:id="@+id/name_value"
         android:layout_width="0dp"
-        android:textAlignment="viewStart"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="@string/name_value"
-        android:layout_marginTop="@dimen/top_seperation"
 
-        app:layout_constraintStart_toEndOf="@+id/guideline3"
+        android:textAlignment="viewStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_below_image" />
-
+        app:layout_constraintStart_toEndOf="@+id/name_title"
+        app:layout_constraintTop_toTopOf="@+id/guideline_below_image" />
 
 
     <TextView
         android:id="@+id/project_url_title"
         android:layout_width="0dp"
-        android:textAlignment="viewStart"
         android:layout_height="wrap_content"
-        android:text="@string/project_url_title"
-        android:layout_marginTop="@dimen/top_seperation"
+        android:layout_marginEnd="@dimen/top_seperation"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_value" />
+        android:text="@string/project_url_title"
+        android:textAlignment="viewStart"
+        app:layout_constraintBaseline_toBaselineOf="@+id/project_url"
+        app:layout_constraintEnd_toStartOf="@+id/project_url"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/project_url"
         android:layout_width="wrap_content"
-        android:textAlignment="viewStart"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_seperation"
-        android:autoLink="web"
-        android:singleLine="false"
-        android:textColor="@color/hyperlink_color"
-        android:text="https://github.com/shipra578/gitMobileSearch"
-        app:layout_constraintStart_toEndOf="@+id/guideline3"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
         android:maxLines="4"
+        android:singleLine="false"
+        android:text="https://github.com/shipra578/gitMobileSearch"
+        android:textAlignment="viewStart"
+        android:textColor="@color/hyperlink_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/project_url_title"
         app:layout_constraintTop_toBottomOf="@+id/name_value" />
-
 
 
     <TextView
         android:id="@+id/description_title"
         android:layout_width="0dp"
-        android:textAlignment="viewStart"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/top_seperation"
         android:text="@string/description_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/project_url" />
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toTopOf="@+id/description_value"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <TextView
         android:id="@+id/description_value"
-        android:layout_width="match_parent"
-        android:textAlignment="viewStart"
+        android:layout_width="0dp"
         android:layout_height="100dp"
-        android:layout_marginTop="@dimen/top_seperation"
         android:text="@string/description_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_title" />
+        android:textAlignment="viewStart"
+        app:layout_constraintBottom_toTopOf="@+id/contributor_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
         android:id="@+id/contributor_list"
-        android:layout_marginTop="@dimen/top_seperation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_value"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
