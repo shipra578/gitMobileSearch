@@ -38,7 +38,7 @@ data class Repositories(
                 parcel.readInt(),
                 parcel.readInt(),
                 parcel.readString()!!,
-                parcel.readParcelable<Owner>(ClassLoader.getSystemClassLoader())!!,
+                parcel.readParcelable<Owner>(Owner::class.java.classLoader)!!,
                 parcel.readString()!!,
                 parcel.createTypedArrayList(Contributors) as List<Contributors>) {
         }
@@ -49,7 +49,7 @@ data class Repositories(
                 parcel.writeInt(repoId)
                 parcel.writeInt(item_id)
                 parcel.writeString(name)
-                parcel.writeParcelable(owner, Parcelable.PARCELABLE_WRITE_RETURN_VALUE)
+                parcel.writeParcelable(owner, flags)
                 parcel.writeString(contributors_url)
                 parcel.writeTypedList(contributors)
         }

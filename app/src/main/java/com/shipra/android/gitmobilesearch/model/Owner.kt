@@ -35,13 +35,16 @@ data class Owner(
                 return 0
         }
 
+
+
         companion object CREATOR : Parcelable.Creator<Owner> {
                 override fun createFromParcel(parcel: Parcel): Owner {
                         return Owner(parcel)
                 }
 
                 override fun newArray(size: Int): Array<Owner?> {
-                        return arrayOfNulls(size)
+                        var owner = Owner(0, "", "", "")
+                        return arrayOf(owner)
                 }
         }
 

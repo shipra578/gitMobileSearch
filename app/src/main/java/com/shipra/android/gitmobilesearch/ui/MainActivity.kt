@@ -20,7 +20,7 @@ import com.shipra.android.gitmobilesearch.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), ListItemClickListener{
+class MainActivity : AppCompatActivity(), ListItemClickListener {
 
     companion object {
         val TAG = "MainActivity"
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), ListItemClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mRecyclerView = repo_recycler_view
+        mRecyclerView = item_recycler_view
         mSearchView = search_repo
 
         //mSearchView.setOnQueryTextListener(this)
@@ -74,8 +74,12 @@ class MainActivity : AppCompatActivity(), ListItemClickListener{
         bundle.putParcelable(Constants.ITEM_OBJECT, itemsList[position])
 
         intent.putExtra(Constants.ITEM_LIST_BUNDLE, bundle)
-        intent.putExtra(Constants.KEY_DESCRIPTION,itemsList[position].description)
-        intent.putExtra(Constants.KEY_PROJECT_LINK,itemsList[position].html_url)
+        var desc = itemsList[position].description
+        if (desc == null) {
+            desc = ""
+        }
+        intent.putExtra(Constants.KEY_DESCRIPTION, desc)
+        intent.putExtra(Constants.KEY_PROJECT_LINK, itemsList[position].html_url)
         startActivity(intent)
     }
 }
