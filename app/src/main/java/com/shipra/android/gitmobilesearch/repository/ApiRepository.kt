@@ -222,6 +222,7 @@ class ApiRepository @Inject constructor(app: Application) {
 
             override fun apply(t: Repositories): ObservableSource<List<Contributors>> {
                 t.item_id = itemID
+                t.avatar_url = t.owner.avatar_url
                 // listRepositories.add(t)
                 if (mDao.checkIfItemPresent(t.repoId) == null) {
                     mDao.insertRepositories(t)

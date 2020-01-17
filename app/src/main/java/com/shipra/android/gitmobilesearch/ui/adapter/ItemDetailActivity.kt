@@ -35,6 +35,7 @@ class ItemDetailActivity : AppCompatActivity(), ListItemClickListener {
         setContentView(R.layout.activity_item_detail)
         val bundle = intent?.getBundleExtra(Constants.ITEM_LIST_BUNDLE)
         mRecycler = repo_recycler_view
+        imageOwner = cont_image_detail
         var avatar_url: String
         if (bundle != null) {
             val itemPojo = bundle?.getParcelable<ItemsPojo>(Constants.ITEM_OBJECT)

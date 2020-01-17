@@ -73,6 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/top_seperation"
         android:autoLink="web"
+        android:singleLine="false"
         android:textColor="@color/hyperlink_color"
         android:text="https://github.com/shipra578/gitMobileSearch"
         app:layout_constraintStart_toEndOf="@+id/guideline3"

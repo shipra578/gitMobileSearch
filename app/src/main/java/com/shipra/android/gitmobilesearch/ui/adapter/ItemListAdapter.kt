@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.home_list_adapter_layout.view.*
 class ItemListAdapter(private val productList: ArrayList<ItemsPojo>?, private val mContext: Context) : RecyclerView.Adapter<ItemViewHolder>()/*, Filterable*/ {
 
     var mListener: ListItemClickListener = mContext as MainActivity
-    var productListCopy: ArrayList<ItemsPojo>? = productList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
 

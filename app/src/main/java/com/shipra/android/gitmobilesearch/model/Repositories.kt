@@ -31,6 +31,10 @@ data class Repositories(
         @ColumnInfo(name = "contributors_url")
         var contributors_url: String,
 
+
+        @ColumnInfo(name = "avatar_url_c")
+        var avatar_url: String,
+
         @Ignore
         var contributors: List<Contributors>) : Parcelable {
 
@@ -40,10 +44,11 @@ data class Repositories(
                 parcel.readString()!!,
                 parcel.readParcelable<Owner>(Owner::class.java.classLoader)!!,
                 parcel.readString()!!,
+                parcel.readString()!!,
                 parcel.createTypedArrayList(Contributors) as List<Contributors>) {
         }
 
-        constructor() : this(0, 0, "", Owner(0,"","",""), "", ArrayList<Contributors>())
+        constructor() : this(0, 0, "", Owner(0,"","",""), "", "",ArrayList<Contributors>())
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
                 parcel.writeInt(repoId)
@@ -51,6 +56,7 @@ data class Repositories(
                 parcel.writeString(name)
                 parcel.writeParcelable(owner, flags)
                 parcel.writeString(contributors_url)
+                parcel.writeString(avatar_url)
                 parcel.writeTypedList(contributors)
         }
 
