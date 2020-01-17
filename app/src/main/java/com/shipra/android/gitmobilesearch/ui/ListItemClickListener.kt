@@ -4,5 +4,5 @@ import android.view.View
 
 interface ListItemClickListener {
 
-    fun onListItemClicked(view: View, position: Int,obj: Any)
+    fun onListItemClicked(view: View?, position: Int)
 }

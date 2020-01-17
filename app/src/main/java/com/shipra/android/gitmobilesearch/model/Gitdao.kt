@@ -9,8 +9,13 @@ import androidx.room.Query
 interface GitDao {
 
 
-    @Query("select * from itemspojo ORDER BY watcher_count DESC")
-    fun loadAllItemsRepo(): List<ItemsPojo>
+    @Query("select * from itemspojo WHERE name LIKE '%' || :asearchText || '%' ORDER BY watcher_count DESC LIMIT 10")//
+    fun loadAllItemsRepo(asearchText: String): List<ItemsPojo>
+
+
+    @Query("select * from itemspojo")
+    fun loadAllItemsInRepo(): List<ItemsPojo>
+
 
     @Query("DELETE FROM itemspojo")
     fun deleteAll()

@@ -25,7 +25,6 @@ data class Repositories(
         var name: String ="",
 
         @Ignore
-        @Transient
         @SerializedName("owner")
         var owner: Owner,
 

@@ -28,5 +28,25 @@ interface Constants {
 
         @JvmField
         val CLIENT_SECRET_VALUE: String = "c0829d194867b9ce9354cd3b5b79b391223a42d0"
+
+        @JvmField
+        val ITEM_LIST_BUNDLE: String = "Item_list_bundle"
+
+        @JvmField
+        val ITEM_OBJECT: String = "Item_list"
+
+        @JvmField
+        val KEY_DESCRIPTION: String = "key_description"
+
+        @JvmField
+        val KEY_PROJECT_LINK: String = "key_project_link"
+
+        @JvmField
+        val REPO_LIST_BUNDLE: String = "Repo_list_bundle"
+
+
+        @JvmField
+        val KEY_REPO_OBJECT: String = "key_repo_object"
+
     }
 }

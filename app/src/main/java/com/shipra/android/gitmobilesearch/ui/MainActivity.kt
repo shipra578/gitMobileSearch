@@ -1,5 +1,6 @@
 package com.shipra.android.gitmobilesearch.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,11 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shipra.android.gitmobilesearch.R
 import com.shipra.android.gitmobilesearch.model.ItemsPojo
+import com.shipra.android.gitmobilesearch.ui.adapter.ItemDetailActivity
 import com.shipra.android.gitmobilesearch.ui.adapter.ItemListAdapter
+import com.shipra.android.gitmobilesearch.util.Constants
+import com.shipra.android.gitmobilesearch.util.GetRxObservableFromView
 import com.shipra.android.gitmobilesearch.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() ,ListItemClickListener, SearchView.OnQueryTextListener{
+
+class MainActivity : AppCompatActivity(), ListItemClickListener{
 
     companion object {
         val TAG = "MainActivity"
@@ -24,7 +29,7 @@ class MainActivity : AppCompatActivity() ,ListItemClickListener, SearchView.OnQu
 
     lateinit var mRecyclerView: RecyclerView
 
-    lateinit var mSearchView : SearchView
+    lateinit var mSearchView: SearchView
     lateinit var adapter: ItemListAdapter
 
     var itemsList: ArrayList<ItemsPojo> = arrayListOf()
@@ -36,15 +41,22 @@ class MainActivity : AppCompatActivity() ,ListItemClickListener, SearchView.OnQu
         mRecyclerView = repo_recycler_view
         mSearchView = search_repo
 
-        mSearchView.setOnQueryTextListener(this)
+        //mSearchView.setOnQueryTextListener(this)
         val manager = LinearLayoutManager(applicationContext)
         manager.orientation = LinearLayoutManager.VERTICAL
         mRecyclerView.setLayoutManager(manager)
         adapter = ItemListAdapter(itemsList, this)
         mRecyclerView.adapter = adapter
         mViewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application).create(MainViewModel::class.java)
-        itemsList.clear()
-        mViewModel?.getAllRepo("Shipra")?.observe(this, Observer {
+
+        registerForSearchResult()
+
+    }
+
+    fun registerForSearchResult() {
+
+        mViewModel?.getAllRepo(GetRxObservableFromView.fromView(mSearchView))?.observe(this, Observer {
+            itemsList.clear()
             for (item in it) {
                 Log.e(TAG, item.full_name)
                 itemsList.add(item)
@@ -53,18 +65,17 @@ class MainActivity : AppCompatActivity() ,ListItemClickListener, SearchView.OnQu
         })
     }
 
-    override fun onListItemClicked(view: View, position: Int, obj: Any) {
+    override fun onListItemClicked(view: View?, position: Int) {
 
+        var intent = Intent(applicationContext, ItemDetailActivity::class.java)
 
-    }
+        var bundle = Bundle()
 
-    override fun onQueryTextSubmit(p0: String?): Boolean {
+        bundle.putParcelable(Constants.ITEM_OBJECT, itemsList[position])
 
-        return false
-    }
-
-    override fun onQueryTextChange(p0: String?): Boolean {
-        adapter.filter.filter(p0)
-        return false
+        intent.putExtra(Constants.ITEM_LIST_BUNDLE, bundle)
+        intent.putExtra(Constants.KEY_DESCRIPTION,itemsList[position].description)
+        intent.putExtra(Constants.KEY_PROJECT_LINK,itemsList[position].html_url)
+        startActivity(intent)
     }
 }

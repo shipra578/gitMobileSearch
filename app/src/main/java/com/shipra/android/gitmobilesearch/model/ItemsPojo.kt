@@ -4,8 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.room.*
 import com.google.gson.annotations.SerializedName
+import io.reactivex.annotations.Nullable
 
-@Entity(tableName = "ItemsPojo", indices = [Index("id")])
+@Entity(tableName = "ItemsPojo", indices = [Index("id","name")])
 data class ItemsPojo(
 
         @PrimaryKey
@@ -29,9 +30,18 @@ data class ItemsPojo(
         @SerializedName("watchers_count")
         var watcher_count: Int,
 
-        /*  @ColumnInfo(name = "contributors_url")
-          @SerializedName("contributors_url")
-          var contributors_url: String,*/
+        @ColumnInfo(name = "description")
+        @SerializedName("description")
+        @Nullable
+        @androidx.annotation.Nullable
+        @org.jetbrains.annotations.Nullable
+        @javax.annotation.Nullable
+        var description: String?,
+
+
+        @ColumnInfo(name = "html_url")
+        @SerializedName("html_url")
+        var html_url: String,
 
         @Ignore
         var repositories: List<Repositories>) : Parcelable{
@@ -42,10 +52,12 @@ data class ItemsPojo(
                 parcel.readString()!!,
                 parcel.readParcelable(Owner::class.java.classLoader)!!,
                 parcel.readInt(),
+                parcel.readString(),
+                parcel.readString()!!,
                 parcel.createTypedArrayList(Repositories)!!) {
         }
 
-        constructor() : this(0, "", "", Owner(0, "", "", ""), 0, ArrayList<Repositories>())
+        constructor() : this(0, "", "", Owner(0, "", "", ""), 0,"","" ,ArrayList<Repositories>())
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
                 parcel.writeInt(id)
@@ -53,6 +65,8 @@ data class ItemsPojo(
                 parcel.writeString(full_name)
                 parcel.writeParcelable(owner, flags)
                 parcel.writeInt(watcher_count)
+                parcel.writeString(description)
+                parcel.writeString(html_url)
                 parcel.writeTypedList(repositories)
         }
 
