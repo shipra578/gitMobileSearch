@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), ListItemClickListener {
 
     lateinit var mSearchView: SearchView
     lateinit var adapter: ItemListAdapter
+    lateinit var progressbar: ProgressBar
 
     var itemsList: ArrayList<ItemsPojo> = arrayListOf()
     var mViewModel: MainViewModel? = null
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity(), ListItemClickListener {
         setContentView(R.layout.activity_main)
         mRecyclerView = item_recycler_view
         mSearchView = search_repo
+        progressbar = progressBar2
 
         val manager = LinearLayoutManager(applicationContext)
         manager.orientation = LinearLayoutManager.VERTICAL
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity(), ListItemClickListener {
                 Log.e(TAG, item.full_name)
                 itemsList.add(item)
             }
+            progressbar.visibility = View.GONE
             adapter.notifyDataSetChanged()
         })
     }

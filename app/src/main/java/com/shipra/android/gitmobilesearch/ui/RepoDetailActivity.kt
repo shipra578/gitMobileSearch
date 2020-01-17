@@ -48,7 +48,7 @@ class RepoDetailActivity : AppCompatActivity() {
 
         projectLinkView.setOnClickListener(View.OnClickListener {
             intent = Intent(applicationContext, WebViewActivity::class.java)
-            intent.putExtra(Constants.KEY_PROJECT_LINK, projectLink)
+            intent.putExtra(Constants.KEY_WEB_URL, projectLink)
             startActivity(intent)
         })
         var avatar_url: String
