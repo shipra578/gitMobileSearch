@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), ListItemClickListener {
 
     fun registerForSearchResult() {
 
-        mViewModel?.getAllRepo(GetRxObservableFromView.fromView(mSearchView))?.observe(this, Observer {
+        mViewModel?.getAllRepo(GetRxObservableFromView.fromView(mSearchView,progressbar))?.observe(this, Observer {
             itemsList.clear()
             for (item in it) {
                 Log.e(TAG, item.full_name)
